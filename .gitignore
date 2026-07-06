@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Android build artifacts (see android/.gitignore for more)
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/capacitor-cordova-android-plugins/
+
+# Keystore
+*.keystore
+*.jks

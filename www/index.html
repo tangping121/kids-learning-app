@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="screen-orientation" content="landscape">
+    <meta name="x5-orientation" content="landscape">
+    <title>快乐学堂 - 幼小衔接学习软件</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 顶部状态栏 -->
+        <header id="topbar">
+            <div class="topbar-left">
+                <span class="app-logo">🎓 快乐学堂</span>
+            </div>
+            <div class="topbar-center" id="breadcrumb">
+                <span>首页</span>
+            </div>
+            <div class="topbar-right">
+                <span id="clock"></span>
+            </div>
+        </header>
+
+        <!-- 主内容区 -->
+        <main id="content">
+            <!-- 主界面 -->
+            <section id="home-screen" class="screen active">
+                <div class="home-welcome">
+                    <div class="welcome-title">
+                        <h1>🌟 欢迎来到快乐学堂 🌟</h1>
+                        <p>幼小衔接 · 快乐学习 · 健康成长</p>
+                    </div>
+                </div>
+                <div class="home-cards">
+                    <div class="home-card focusable" data-screen="chinese" data-color="red">
+                        <div class="card-icon">📖</div>
+                        <div class="card-title">语 文</div>
+                        <div class="card-subtitle">拼音 · 汉字 · 古诗</div>
+                        <div class="card-arrow">›</div>
+                    </div>
+                    <div class="home-card focusable" data-screen="math" data-color="blue">
+                        <div class="card-icon">🔢</div>
+                        <div class="card-title">数 学</div>
+                        <div class="card-subtitle">数字 · 加减 · 形状</div>
+                        <div class="card-arrow">›</div>
+                    </div>
+                    <div class="home-card focusable" data-screen="english" data-color="green">
+                        <div class="card-icon">🔤</div>
+                        <div class="card-title">英 语</div>
+                        <div class="card-subtitle">字母 · 单词 · 对话</div>
+                        <div class="card-arrow">›</div>
+                    </div>
+                </div>
+                <div class="home-footer">
+                    <span class="hint-text">📡 使用遥控器方向键选择，确认键进入</span>
+                </div>
+            </section>
+
+            <!-- 语文界面 -->
+            <section id="chinese-screen" class="screen">
+                <div class="sub-nav" id="chinese-subnav">
+                    <div class="sub-nav-item focusable" data-module="pinyin">拼音学习</div>
+                    <div class="sub-nav-item focusable" data-module="hanzi">汉字认知</div>
+                    <div class="sub-nav-item focusable" data-module="poetry">古诗欣赏</div>
+                    <div class="sub-nav-item focusable" data-module="idiom">成语故事</div>
+                </div>
+                <div class="module-content" id="chinese-content"></div>
+            </section>
+
+            <!-- 数学界面 -->
+            <section id="math-screen" class="screen">
+                <div class="sub-nav" id="math-subnav">
+                    <div class="sub-nav-item focusable" data-module="numbers">数字认知</div>
+                    <div class="sub-nav-item focusable" data-module="addition">加减运算</div>
+                    <div class="sub-nav-item focusable" data-module="shapes">形状认知</div>
+                    <div class="sub-nav-item focusable" data-module="counting">趣味数数</div>
+                </div>
+                <div class="module-content" id="math-content"></div>
+            </section>
+
+            <!-- 英语界面 -->
+            <section id="english-screen" class="screen">
+                <div class="sub-nav" id="english-subnav">
+                    <div class="sub-nav-item focusable" data-module="alphabet">字母学习</div>
+                    <div class="sub-nav-item focusable" data-module="words">单词认知</div>
+                    <div class="sub-nav-item focusable" data-module="dialogue">日常对话</div>
+                    <div class="sub-nav-item focusable" data-module="songs">英文儿歌</div>
+                </div>
+                <div class="module-content" id="english-content"></div>
+            </section>
+        </main>
+
+        <!-- 底部提示栏 -->
+        <footer id="bottombar">
+            <div class="footer-hints">
+                <span class="hint-item"><span class="key-icon">⬆⬇⬅➡</span> 选择</span>
+                <span class="hint-item"><span class="key-icon">OK</span> 确认</span>
+                <span class="hint-item"><span class="key-icon">BACK</span> 返回</span>
+                <span class="hint-item"><span class="key-icon">🔊</span> 语音播放</span>
+            </div>
+        </footer>
+
+        <!-- 语音播放指示器 -->
+        <div id="voice-indicator" class="voice-indicator">
+            <div class="voice-wave">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <span class="voice-text">正在播放...</span>
+        </div>
+
+        <!-- 大字提示弹窗 -->
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script src="js/data/chinese-data.js"></script>
+    <script src="js/data/math-data.js"></script>
+    <script src="js/data/english-data.js"></script>
+    <script src="js/tts.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/modules/chinese.js"></script>
+    <script src="js/modules/math.js"></script>
+    <script src="js/modules/english.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

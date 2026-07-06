@@ -1,0 +1,30 @@
+{
+  "name": "kids-learning-app",
+  "version": "1.0.0",
+  "description": "快乐学堂 - 幼小衔接学习软件（语文数学英语），横屏TV遥控器操作",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx http-server . -p 8080 -c-1",
+    "build:android": "echo '请按照 README-ANDROID.md 中的说明使用 Capacitor 打包 APK'",
+    "serve": "npx http-server . -p 8080 -c-1 --cors"
+  },
+  "keywords": [
+    "education",
+    "kids",
+    "android-tv",
+    "learning",
+    "chinese",
+    "math",
+    "english"
+  ],
+  "author": "WorkBuddy",
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^6.2.1",
+    "@capacitor/core": "^6.2.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.1",
+    "http-server": "^14.1.1"
+  }
+}

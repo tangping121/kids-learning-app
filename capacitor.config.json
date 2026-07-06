@@ -1,0 +1,12 @@
+{
+  "appId": "com.happyedu.kidslearning",
+  "appName": "快乐学堂",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": true,
+    "backgroundColor": "#1a1a2e"
+  }
+}
