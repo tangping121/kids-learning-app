@@ -1,6 +1,6 @@
 /* ============================
    快乐学堂 - 主样式表
-   横屏TV适配 · 遥控器焦点导航
+   横屏TV适配 · 遥控器焦点导航 · 触屏手机支持
    ============================ */
 
 /* 重置 */
@@ -29,6 +29,7 @@
     --focus-shadow: 0 0 0 4px #f5a623, 0 0 30px rgba(245, 166, 35, 0.6);
     --radius: 16px;
     --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --touch-min: 44px; /* 触屏最小点击区域 44px */
 }
 
 html, body {
@@ -39,11 +40,12 @@ html, body {
     color: var(--color-text);
     font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
     font-size: 20px;
+    touch-action: manipulation; /* 禁止双击缩放 */
 }
 
-/* 强制横屏 */
-@media (orientation: portrait) {
-    #app {
+/* TV横屏模式：仅在宽屏设备（宽度>高度）时强制横屏 */
+@media (orientation: portrait) and (min-width: 600px) {
+    #app.tv-mode {
         transform: rotate(90deg);
         transform-origin: center center;
         width: 100vh;
@@ -844,7 +846,7 @@ html, body {
     to { stroke-dashoffset: 0; }
 }
 
-/* 响应式微调 */
+/* 响应式微调 - 平板/小屏横屏 */
 @media (max-width: 1280px) {
     .home-card { width: 260px; height: 320px; }
     .card-icon { font-size: 80px; }
@@ -857,4 +859,229 @@ html, body {
     .card-icon { font-size: 64px; }
     .welcome-title h1 { font-size: 30px; }
     .detail-display { font-size: 140px; min-width: 200px; min-height: 200px; }
+}
+
+/* ============================
+   手机竖屏适配
+   ============================ */
+@media (max-width: 768px) {
+    :root {
+        font-size: 16px;
+    }
+
+    #topbar { height: 48px; padding: 0 16px; }
+    .app-logo { font-size: 20px; }
+    #clock { font-size: 16px; }
+
+    /* 首页竖屏布局 */
+    .home-welcome { padding: 16px 0 10px; }
+    .welcome-title h1 { font-size: 26px; }
+    .welcome-title p { font-size: 14px; letter-spacing: 2px; }
+
+    .home-cards {
+        flex-direction: row;
+        gap: 16px;
+        padding: 10px 16px;
+    }
+
+    .home-card {
+        width: auto;
+        flex: 1;
+        height: auto;
+        min-height: 200px;
+        padding: 20px 10px;
+        border-radius: 20px;
+    }
+
+    .card-icon { font-size: 52px; margin-bottom: 10px; }
+    .card-title { font-size: 28px; letter-spacing: 4px; }
+    .card-subtitle { font-size: 13px; }
+
+    .home-footer { padding: 8px; }
+    .hint-text { font-size: 12px; }
+
+    /* 子导航 */
+    .sub-nav {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+    .sub-nav-item {
+        padding: 8px 16px;
+        font-size: 16px;
+        border-radius: 20px;
+        min-height: var(--touch-min);
+        display: flex;
+        align-items: center;
+    }
+
+    /* 内容网格 */
+    .content-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+        padding: 8px;
+    }
+
+    .content-card {
+        padding: 14px;
+        border-radius: 14px;
+        min-height: 130px;
+    }
+    .content-card .card-emoji { font-size: 40px; }
+    .content-card .card-text { font-size: 22px; }
+
+    /* 字母表竖屏 4列 */
+    .alphabet-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        padding: 10px;
+    }
+    .letter-card .letter-upper { font-size: 36px; }
+    .letter-card .letter-lower { font-size: 18px; }
+
+    /* 详情页 */
+    .detail-view { padding: 20px; }
+    .detail-main { gap: 20px; flex-direction: column !important; }
+    .detail-display {
+        font-size: 100px !important;
+        min-width: 150px !important;
+        min-height: 150px !important;
+        border-radius: 20px;
+    }
+
+    .detail-info h2 { font-size: 26px; }
+    .detail-info p { font-size: 18px; }
+    .detail-info .pinyin { font-size: 22px; }
+
+    .detail-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .action-btn {
+        padding: 12px 24px;
+        font-size: 18px;
+        min-height: var(--touch-min);
+    }
+
+    /* 古诗/对话竖屏 */
+    .poetry-title { font-size: 30px; }
+    .poetry-author { font-size: 16px; margin-bottom: 16px; }
+    .poetry-lines { font-size: 24px; line-height: 2; }
+    .dialogue-line .speaker { font-size: 30px; }
+    .dialogue-line .bubble { padding: 10px 16px; font-size: 18px; }
+    .song-title { font-size: 26px; }
+    .song-lyrics { font-size: 18px; }
+
+    /* 数学竖屏 */
+    .arithmetic-display { font-size: 60px; gap: 12px; }
+    .math-objects .obj { font-size: 36px; }
+
+    /* 底部栏 */
+    #bottombar { height: 36px; }
+    .footer-hints { gap: 15px; }
+    .hint-item { font-size: 12px; }
+
+    /* 返回按钮 */
+    .back-btn {
+        padding: 8px 18px;
+        font-size: 16px;
+        min-height: var(--touch-min);
+        min-width: var(--touch-min);
+        display: flex;
+        align-items: center;
+    }
+
+    /* 百家姓竖屏更密 */
+    .content-grid[style*="minmax(140px"] {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+
+    /* 钟表竖屏缩小 */
+    .detail-display svg { width: 200px !important; height: 200px !important; }
+
+    /* 比较大小竖屏 */
+    .arithmetic-group .obj { font-size: 28px; }
+
+    /* 语音指示器 */
+    .voice-indicator { top: 56px; right: 12px; padding: 6px 12px; }
+    .voice-text { font-size: 13px; }
+
+    /* Toast */
+    .toast { font-size: 18px; padding: 14px 28px; }
+}
+
+/* 超小屏手机 < 400px */
+@media (max-width: 400px) {
+    .home-card { min-height: 160px; padding: 14px 8px; }
+    .card-icon { font-size: 40px; }
+    .card-title { font-size: 22px; letter-spacing: 2px; }
+    .card-subtitle { font-size: 11px; }
+
+    .content-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .content-card { padding: 10px; min-height: 110px; }
+    .content-card .card-emoji { font-size: 32px; }
+    .content-card .card-text { font-size: 18px; }
+
+    .alphabet-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .letter-card .letter-upper { font-size: 30px; }
+
+    .detail-display { font-size: 80px !important; }
+}
+
+/* ============================
+   触屏交互增强
+   ============================ */
+/* 触屏设备：active 态反馈 */
+@media (hover: none) and (pointer: coarse) {
+    .focusable:active {
+        transform: scale(0.95);
+        opacity: 0.85;
+        transition: 0.1s;
+    }
+
+    .home-card:active {
+        transform: scale(0.95);
+    }
+
+    .action-btn:active {
+        transform: scale(0.95);
+        opacity: 0.85;
+    }
+
+    .sub-nav-item:active {
+        transform: scale(0.95);
+    }
+
+    /* 触屏设备隐藏遥控器提示 */
+    .key-icon { display: none; }
+    .footer-hints {
+        font-size: 13px;
+        color: var(--color-text-dim);
+    }
+
+    /* 触屏设备不需要 focus 高亮（点击直接触发） */
+    .focusable.focused {
+        box-shadow: none;
+    }
+}
+
+/* 滑动返回手势提示条 */
+.swipe-hint {
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: rgba(0,0,0,0.7);
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--color-text-dim);
+    z-index: 90;
+    animation: fadeInUp 0.5s ease;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .swipe-hint.visible { display: flex; }
 }

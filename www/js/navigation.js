@@ -1,6 +1,6 @@
 /**
- * 遥控器/键盘导航系统
- * 支持方向键移动焦点、确认/返回操作
+ * 遥控器/键盘/触屏 导航系统
+ * 支持方向键移动焦点、确认/返回操作、触屏滑动返回
  */
 const Navigation = (function() {
     let focusableElements = [];
@@ -8,6 +8,13 @@ const Navigation = (function() {
     let currentContext = null; // 'home' | 'subnav' | 'content' | 'detail'
     let contexts = {};
     let lastContextBeforeDetail = null;
+
+    // 触屏滑动状态
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+    const SWIPE_THRESHOLD = 80; // 滑动距离阈值
+    const SWIPE_TIME = 500; // 滑动时间阈值(ms)
 
     // 遥控器键码映射
     const KEY_MAP = {
@@ -40,8 +47,35 @@ const Navigation = (function() {
 
     function init() {
         document.addEventListener('keydown', handleKeyDown);
+
+        // 触屏滑动返回手势
+        document.addEventListener('touchstart', handleTouchStart, { passive: true });
+        document.addEventListener('touchend', handleTouchEnd, { passive: true });
+
         // 初始化主界面焦点
         setContext('home');
+    }
+
+    function handleTouchStart(e) {
+        if (!e.touches || e.touches.length === 0) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+    }
+
+    function handleTouchEnd(e) {
+        if (!e.changedTouches || e.changedTouches.length === 0) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        const dt = Date.now() - touchStartTime;
+
+        // 只在详情视图中响应滑动返回（从左边缘向右滑）
+        if (dt < SWIPE_TIME && Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.5) {
+            if (dx > 0 && touchStartX < 50) {
+                // 从左边缘右滑 → 返回
+                handleBack();
+            }
+        }
     }
 
     function handleKeyDown(e) {

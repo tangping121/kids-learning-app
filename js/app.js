@@ -11,19 +11,48 @@ const App = (function() {
 
     let currentScreen = 'home';
     let currentModule = null;
+    let isTouchDevice = false;
 
     function init() {
         TTS.init();
         Navigation.init();
+        detectDeviceMode();
         setupClock();
         setupBackgroundEffects();
         setupCardClicks();
 
-        // 默认选中第一个卡片
-        setTimeout(() => {
-            const firstCard = document.querySelector('.home-card');
-            if (firstCard) firstCard.classList.add('focused');
-        }, 100);
+        // 默认选中第一个卡片（TV模式需要焦点）
+        if (!isTouchDevice) {
+            setTimeout(() => {
+                const firstCard = document.querySelector('.home-card');
+                if (firstCard) firstCard.classList.add('focused');
+            }, 100);
+        }
+    }
+
+    // 检测设备模式：触屏手机 vs TV遥控器
+    function detectDeviceMode() {
+        isTouchDevice = ('ontouchstart' in window) ||
+                        (navigator.maxTouchPoints > 0) ||
+                        (window.matchMedia('(hover: none) and (pointer: coarse)').matches);
+
+        const app = document.getElementById('app');
+        const tvHints = document.getElementById('footer-hints-tv');
+        const touchHints = document.getElementById('footer-hints-touch');
+
+        if (isTouchDevice) {
+            // 触屏手机：不强制横屏旋转
+            app.classList.remove('tv-mode');
+            document.body.classList.add('touch-device');
+            if (tvHints) tvHints.style.display = 'none';
+            if (touchHints) touchHints.style.display = 'flex';
+        } else {
+            // TV/遥控器：启用横屏旋转
+            app.classList.add('tv-mode');
+            document.body.classList.remove('touch-device');
+            if (tvHints) tvHints.style.display = 'flex';
+            if (touchHints) touchHints.style.display = 'none';
+        }
     }
 
     function setupClock() {
