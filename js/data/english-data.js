@@ -217,3 +217,116 @@ const SONGS_DATA = [
         cn: '如果你快乐就拍拍手'
     }
 ];
+
+// 颜色与形状（英语）
+const COLOR_SHAPE_DATA = [
+    { en: 'Red Circle', cn: '红色圆形', emoji: '🔴', color: '#e74c3c' },
+    { en: 'Blue Square', cn: '蓝色正方形', emoji: '🔵', color: '#3498db' },
+    { en: 'Yellow Triangle', cn: '黄色三角形', emoji: '🟡', color: '#f1c40f' },
+    { en: 'Green Star', cn: '绿色星星', emoji: '🟢', color: '#2ecc71' },
+    { en: 'Purple Heart', cn: '紫色心形', emoji: '🟣', color: '#9b59b6' },
+    { en: 'Orange Diamond', cn: '橙色菱形', emoji: '🟠', color: '#e67e22' },
+    { en: 'White Rectangle', cn: '白色长方形', emoji: '⚪', color: '#ecf0f1' },
+    { en: 'Pink Oval', cn: '粉色椭圆', emoji: '💗', color: '#e91e8c' },
+    { en: 'Brown Square', cn: '棕色正方形', emoji: '🟫', color: '#8B4513' },
+    { en: 'Black Circle', cn: '黑色圆形', emoji: '⚫', color: '#2c3e50' }
+];
+
+// 数字英语
+const NUM_EN_DATA = [
+    { num: 0, en: 'Zero', cn: '零', emoji: '0️⃣' },
+    { num: 1, en: 'One', cn: '一', emoji: '1️⃣' },
+    { num: 2, en: 'Two', cn: '二', emoji: '2️⃣' },
+    { num: 3, en: 'Three', cn: '三', emoji: '3️⃣' },
+    { num: 4, en: 'Four', cn: '四', emoji: '4️⃣' },
+    { num: 5, en: 'Five', cn: '五', emoji: '5️⃣' },
+    { num: 6, en: 'Six', cn: '六', emoji: '6️⃣' },
+    { num: 7, en: 'Seven', cn: '七', emoji: '7️⃣' },
+    { num: 8, en: 'Eight', cn: '八', emoji: '8️⃣' },
+    { num: 9, en: 'Nine', cn: '九', emoji: '9️⃣' },
+    { num: 10, en: 'Ten', cn: '十', emoji: '🔟' }
+];
+
+// 情景问答
+const QUIZ_DATA = [
+    {
+        question: 'What color is the sky?',
+        cn: '天空是什么颜色？',
+        image: '🌤️',
+        options: [
+            { en: 'Blue', cn: '蓝色', correct: true },
+            { en: 'Red', cn: '红色', correct: false },
+            { en: 'Green', cn: '绿色', correct: false }
+        ]
+    },
+    {
+        question: 'What animal says "moo"?',
+        cn: '什么动物会"哞哞"叫？',
+        image: '🐄',
+        options: [
+            { en: 'Dog', cn: '狗', correct: false },
+            { en: 'Cat', cn: '猫', correct: false },
+            { en: 'Cow', cn: '牛', correct: true }
+        ]
+    },
+    {
+        question: 'How many legs does a cat have?',
+        cn: '猫有几条腿？',
+        image: '🐱',
+        options: [
+            { en: 'Two', cn: '两条', correct: false },
+            { en: 'Four', cn: '四条', correct: true },
+            { en: 'Six', cn: '六条', correct: false }
+        ]
+    },
+    {
+        question: 'What fruit is yellow and curved?',
+        cn: '什么水果是黄色弯曲的？',
+        image: '🍌',
+        options: [
+            { en: 'Apple', cn: '苹果', correct: false },
+            { en: 'Banana', cn: '香蕉', correct: true },
+            { en: 'Orange', cn: '橙子', correct: false }
+        ]
+    },
+    {
+        question: 'What do you drink from a cup?',
+        cn: '你用杯子喝什么？',
+        image: '☕',
+        options: [
+            { en: 'Water', cn: '水', correct: true },
+            { en: 'Bread', cn: '面包', correct: false },
+            { en: 'Rice', cn: '米饭', correct: false }
+        ]
+    },
+    {
+        question: 'What season has snow?',
+        cn: '哪个季节有雪？',
+        image: '❄️',
+        options: [
+            { en: 'Summer', cn: '夏天', correct: false },
+            { en: 'Winter', cn: '冬天', correct: true },
+            { en: 'Spring', cn: '春天', correct: false }
+        ]
+    },
+    {
+        question: 'Where do fish live?',
+        cn: '鱼住在哪里？',
+        image: '🐟',
+        options: [
+            { en: 'In water', cn: '水里', correct: true },
+            { en: 'In tree', cn: '树上', correct: false },
+            { en: 'On land', cn: '陆地上', correct: false }
+        ]
+    },
+    {
+        question: 'What says "woof woof"?',
+        cn: '什么动物"汪汪"叫？',
+        image: '🐶',
+        options: [
+            { en: 'Bird', cn: '鸟', correct: false },
+            { en: 'Dog', cn: '狗', correct: true },
+            { en: 'Fish', cn: '鱼', correct: false }
+        ]
+    }
+];

@@ -9,6 +9,9 @@ const EnglishModule = (function() {
             case 'words': renderWords(container); break;
             case 'dialogue': renderDialogue(container); break;
             case 'songs': renderSongs(container); break;
+            case 'colorShape': renderColorShape(container); break;
+            case 'numEn': renderNumEn(container); break;
+            case 'quiz': renderQuiz(container); break;
         }
     }
 
@@ -233,6 +236,161 @@ const EnglishModule = (function() {
         TTS.speakEnglish(text);
     }
 
+    // ====== 颜色与形状（英语） ======
+    function renderColorShape(container) {
+        let html = '<div class="content-grid">';
+        COLOR_SHAPE_DATA.forEach((item, i) => {
+            html += `<div class="content-card focusable" data-type="colorShape" data-index="${i}">
+                <div style="width:60px; height:60px; background:${item.color}; border-radius:50%; margin:0 auto 10px;"></div>
+                <div class="card-text" style="font-size:22px; color:#2ecc71;">${item.en}</div>
+                <div class="card-desc">${item.cn}</div>
+            </div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+        Navigation.refreshFocusables();
+    }
+
+    function showColorShapeDetail(index) {
+        const item = COLOR_SHAPE_DATA[index];
+        const html = `
+            <div class="detail-view fade-in">
+                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <div class="detail-main">
+                    <div class="detail-display bounce" style="font-size:140px;">
+                        ${item.emoji}
+                    </div>
+                    <div class="detail-info">
+                        <h2 style="color:#2ecc71; font-size:42px;">${item.en}</h2>
+                        <p style="font-size:28px;">中文：${item.cn}</p>
+                        <div style="width:100px; height:100px; background:${item.color}; border-radius:16px; margin:15px 0;"></div>
+                        <div class="detail-actions">
+                            <button class="action-btn play-btn focusable" onclick="EnglishModule.playColorShape(${index})">🔊 读一读</button>
+                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        document.querySelector('.screen.active').insertAdjacentHTML('beforeend', html);
+        Navigation.pushContext('detail');
+        setTimeout(() => playColorShape(index), 500);
+    }
+
+    function playColorShape(index) {
+        const item = COLOR_SHAPE_DATA[index];
+        TTS.speakSequence([
+            { text: item.en, lang: 'en-US' },
+            { text: item.cn, lang: 'zh-CN' }
+        ]);
+    }
+
+    // ====== 数字英语 ======
+    function renderNumEn(container) {
+        let html = '<div class="content-grid">';
+        NUM_EN_DATA.forEach((item, i) => {
+            html += `<div class="content-card focusable" data-type="numEn" data-index="${i}">
+                <div class="card-text" style="font-size:56px; color:#2ecc71;">${item.num}</div>
+                <div class="card-text" style="font-size:24px; color:var(--color-gold);">${item.en}</div>
+                <div class="card-desc">${item.cn}</div>
+            </div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+        Navigation.refreshFocusables();
+    }
+
+    function showNumEnDetail(index) {
+        const item = NUM_EN_DATA[index];
+        const html = `
+            <div class="detail-view fade-in">
+                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <div class="detail-main">
+                    <div class="detail-display bounce" style="color:#2ecc71;">
+                        ${item.num}
+                    </div>
+                    <div class="detail-info">
+                        <h2 style="color:#2ecc71; font-size:48px;">${item.en}</h2>
+                        <p style="font-size:28px;">中文：${item.cn}</p>
+                        <p style="font-size:20px; color:var(--color-text-dim);">数字 ${item.num} 的英文</p>
+                        <div class="detail-actions">
+                            <button class="action-btn play-btn focusable" onclick="EnglishModule.playNumEn(${index})">🔊 读一读</button>
+                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        document.querySelector('.screen.active').insertAdjacentHTML('beforeend', html);
+        Navigation.pushContext('detail');
+        setTimeout(() => playNumEn(index), 500);
+    }
+
+    function playNumEn(index) {
+        const item = NUM_EN_DATA[index];
+        TTS.speakSequence([
+            { text: item.en, lang: 'en-US' },
+            { text: item.cn, lang: 'zh-CN' }
+        ]);
+    }
+
+    // ====== 情景问答 ======
+    function renderQuiz(container) {
+        let html = '<div class="content-grid">';
+        QUIZ_DATA.forEach((item, i) => {
+            html += `<div class="content-card focusable" data-type="quiz" data-index="${i}" style="min-height:170px;">
+                <div style="font-size:60px; margin-bottom:8px;">${item.image}</div>
+                <div class="card-desc" style="font-size:15px;">${item.cn}</div>
+            </div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+        Navigation.refreshFocusables();
+    }
+
+    function showQuizDetail(index) {
+        const item = QUIZ_DATA[index];
+        let optHtml = item.options.map((o, i) =>
+            `<button class="action-btn focusable" onclick="EnglishModule.checkQuiz(${index},${i})">${o.en} (${o.cn})</button>`
+        ).join('');
+
+        const html = `
+            <div class="detail-view fade-in">
+                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <div class="detail-main" style="flex-direction:column;">
+                    <div style="font-size:80px; margin-bottom:15px;">${item.image}</div>
+                    <h2 style="font-size:32px; color:#2ecc71; margin-bottom:8px;">${item.question}</h2>
+                    <p style="font-size:22px; color:var(--color-text-dim); margin-bottom:25px;">${item.cn}</p>
+                    <div class="detail-actions" id="quiz-options">${optHtml}</div>
+                    <div id="quiz-answer" style="margin-top:15px;"></div>
+                </div>
+            </div>`;
+        document.querySelector('.screen.active').insertAdjacentHTML('beforeend', html);
+        Navigation.pushContext('detail');
+        setTimeout(() => {
+            TTS.speakSequence([
+                { text: item.question, lang: 'en-US' },
+                { text: item.cn, lang: 'zh-CN' }
+            ]);
+        }, 500);
+    }
+
+    function checkQuiz(index, optIndex) {
+        const item = QUIZ_DATA[index];
+        const opt = item.options[optIndex];
+        const ansEl = document.getElementById('quiz-answer');
+        const optEl = document.getElementById('quiz-options');
+        if (opt.correct) {
+            showToast('🎉 Excellent! 太棒了！');
+            TTS.speakSequence([
+                { text: 'Excellent! ' + opt.en + '!', lang: 'en-US' },
+                { text: '答对了！' + opt.cn, lang: 'zh-CN' }
+            ]);
+            if (optEl) optEl.innerHTML = `<p style="font-size:32px; color:#2ecc71; font-weight:700;">✅ ${opt.en} (${opt.cn})</p>`;
+        } else {
+            showToast('🤔 Try again! 再试试！');
+            TTS.speakEnglish('Try again!');
+        }
+    }
+
     function handleCardClick(card) {
         const type = card.dataset.type;
         const index = parseInt(card.dataset.index);
@@ -243,6 +401,9 @@ const EnglishModule = (function() {
             case 'word': showWordDetail(cat, index); break;
             case 'dialogue': showDialogueDetail(index); break;
             case 'song': showSongDetail(index); break;
+            case 'colorShape': showColorShapeDetail(index); break;
+            case 'numEn': showNumEnDetail(index); break;
+            case 'quiz': showQuizDetail(index); break;
         }
     }
 
@@ -254,6 +415,9 @@ const EnglishModule = (function() {
         playWord: playWord,
         playDialogue: playDialogue,
         playDialogueCN: playDialogueCN,
-        playSong: playSong
+        playSong: playSong,
+        playColorShape: playColorShape,
+        playNumEn: playNumEn,
+        checkQuiz: checkQuiz
     };
 })();

@@ -9,6 +9,9 @@ const MathModule = (function() {
             case 'addition': renderArithmetic(container); break;
             case 'shapes': renderShapes(container); break;
             case 'counting': renderCounting(container); break;
+            case 'time': renderTime(container); break;
+            case 'compare': renderCompare(container); break;
+            case 'pattern': renderPattern(container); break;
         }
     }
 
@@ -284,7 +287,6 @@ const MathModule = (function() {
         if (answer === item.answer) {
             showToast('🎉 太棒了！答对了！');
             TTS.speakChinese('太棒了，答对了！一共' + item.answer + '个');
-            // 添加撒花动画
             const options = document.getElementById('counting-options');
             if (options) {
                 options.innerHTML = `<div style="font-size: 80px; animation: bounce 0.5s ease 3;">🎉</div>
@@ -298,6 +300,179 @@ const MathModule = (function() {
         }
     }
 
+    // ====== 时间认知 ======
+    function renderTime(container) {
+        let html = '<div class="content-grid">';
+        TIME_DATA.forEach((item, i) => {
+            html += `<div class="content-card focusable" data-type="time" data-index="${i}">
+                <div class="card-emoji">${item.emoji}</div>
+                <div class="card-text" style="font-size:28px; color:#3498db;">${item.desc}</div>
+                <div class="card-desc">${item.event}</div>
+            </div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+        Navigation.refreshFocusables();
+    }
+
+    function showTimeDetail(index) {
+        const item = TIME_DATA[index];
+        const hAngle = (item.hour % 12) * 30 + item.minute * 0.5;
+        const mAngle = item.minute * 6;
+        const html = `
+            <div class="detail-view fade-in">
+                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <div class="detail-main">
+                    <div class="detail-display bounce" style="width:300px; height:300px;">
+                        <svg viewBox="0 0 200 200" style="width:280px; height:280px;">
+                            <circle cx="100" cy="100" r="90" fill="none" stroke="#f5a623" stroke-width="4"/>
+                            ${[...Array(12)].map((_,i) => {
+                                const a = (i+1)*30*Math.PI/180 - Math.PI/2;
+                                const x = 100 + 75*Math.cos(a), y = 100 + 75*Math.sin(a);
+                                return `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="18">${i+1}</text>`;
+                            }).join('')}
+                            <line x1="100" y1="100" x2="${100+50*Math.sin(hAngle*Math.PI/180)}" y2="${100-50*Math.cos(hAngle*Math.PI/180)}" stroke="#f5a623" stroke-width="5" stroke-linecap="round"/>
+                            <line x1="100" y1="100" x2="${100+70*Math.sin(mAngle*Math.PI/180)}" y2="${100-70*Math.cos(mAngle*Math.PI/180)}" stroke="#3498db" stroke-width="3" stroke-linecap="round"/>
+                            <circle cx="100" cy="100" r="5" fill="#e94560"/>
+                        </svg>
+                    </div>
+                    <div class="detail-info">
+                        <h2 style="color:#3498db;">${item.desc}</h2>
+                        <p style="font-size:36px;">${item.event}</p>
+                        <p style="font-size:20px; color:var(--color-text-dim); margin-top:10px;">时针指向 ${item.hour % 12 || 12}，分针指向 ${item.minute === 0 ? '12' : item.minute}</p>
+                        <div class="detail-actions">
+                            <button class="action-btn play-btn focusable" onclick="MathModule.playTime(${index})">🔊 读时间</button>
+                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        document.querySelector('.screen.active').insertAdjacentHTML('beforeend', html);
+        Navigation.pushContext('detail');
+        setTimeout(() => playTime(index), 500);
+    }
+
+    function playTime(index) {
+        const item = TIME_DATA[index];
+        TTS.speakChinese(item.desc + '。' + item.event);
+    }
+
+    // ====== 比较大小 ======
+    function renderCompare(container) {
+        let html = '<div class="content-grid">';
+        COMPARE_DATA.forEach((item, i) => {
+            html += `<div class="content-card focusable" data-type="compare" data-index="${i}">
+                <div style="font-size:56px; display:flex; gap:15px; align-items:center;">
+                    <span>${item.left}</span><span style="color:var(--color-gold); font-size:36px;">?</span><span>${item.right}</span>
+                </div>
+                <div class="card-desc">${item.question}</div>
+            </div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+        Navigation.refreshFocusables();
+    }
+
+    function showCompareDetail(index) {
+        const item = COMPARE_DATA[index];
+        const html = `
+            <div class="detail-view fade-in">
+                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <div class="detail-main" style="flex-direction:column;">
+                    <h2 style="font-size:32px; color:var(--color-gold); margin-bottom:25px;">${item.question}</h2>
+                    <div style="display:flex; align-items:center; gap:40px; margin-bottom:25px;">
+                        <div style="text-align:center;">
+                            <div style="font-size:100px;">${item.left}</div>
+                            <p style="font-size:24px;">${item.leftName}</p>
+                        </div>
+                        <div id="compare-symbol" style="font-size:80px; color:var(--color-gold);">?</div>
+                        <div style="text-align:center;">
+                            <div style="font-size:100px;">${item.right}</div>
+                            <p style="font-size:24px;">${item.rightName}</p>
+                        </div>
+                    </div>
+                    <div class="detail-actions">
+                        <button class="action-btn play-btn focusable" onclick="MathModule.revealCompare(${index})">👀 看答案</button>
+                        <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                    </div>
+                    <div id="compare-answer" style="margin-top:15px;"></div>
+                </div>
+            </div>`;
+        document.querySelector('.screen.active').insertAdjacentHTML('beforeend', html);
+        Navigation.pushContext('detail');
+        setTimeout(() => TTS.speakChinese(item.question), 400);
+    }
+
+    function revealCompare(index) {
+        const item = COMPARE_DATA[index];
+        const symEl = document.getElementById('compare-symbol');
+        const ansEl = document.getElementById('compare-answer');
+        if (symEl) {
+            symEl.textContent = item.answer;
+            symEl.style.color = '#2ecc71';
+            symEl.classList.add('bounce');
+        }
+        const biggerName = item.bigger === 'left' ? item.leftName : item.bigger === 'right' ? item.rightName : '一样大';
+        if (ansEl) {
+            ansEl.innerHTML = `<p style="font-size:28px; color:#2ecc71; font-weight:700;">✅ ${item.leftName} ${item.answer} ${item.rightName}，${biggerName}${item.bigger === 'equal' ? '' : '更大'}！</p>`;
+        }
+        TTS.speakChinese(item.leftName + item.answer + item.rightName + '，' + biggerName + (item.bigger === 'equal' ? '一样大' : '更大'));
+    }
+
+    // ====== 规律推理 ======
+    function renderPattern(container) {
+        let html = '<div class="content-grid">';
+        PATTERN_DATA.forEach((item, i) => {
+            html += `<div class="content-card focusable" data-type="pattern" data-index="${i}">
+                <div style="font-size:36px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+                    ${item.sequence.map(s => `<span>${s}</span>`).join('')}
+                    <span style="color:var(--color-gold);">？</span>
+                </div>
+                <div class="card-desc">找出下一个</div>
+            </div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+        Navigation.refreshFocusables();
+    }
+
+    function showPatternDetail(index) {
+        const item = PATTERN_DATA[index];
+        let seqHtml = item.sequence.map((s, i) => `<span class="obj" style="animation-delay:${i*0.15}s;">${s}</span>`).join('');
+        let optHtml = item.options.map(o => `<button class="action-btn focusable" onclick="MathModule.checkPattern(${index},'${o}')">${o}</button>`).join('');
+
+        const html = `
+            <div class="detail-view fade-in">
+                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <div class="detail-main" style="flex-direction:column;">
+                    <h2 style="font-size:32px; color:var(--color-gold); margin-bottom:20px;">🧩 找出下一个</h2>
+                    <div style="display:flex; gap:12px; font-size:56px; align-items:center; margin-bottom:25px;">
+                        ${seqHtml}
+                        <span style="color:var(--color-gold); font-size:64px;">？</span>
+                    </div>
+                    <p style="font-size:18px; color:var(--color-text-dim); margin-bottom:15px;">💡 提示：${item.hint}</p>
+                    <div class="detail-actions" id="pattern-options">${optHtml}</div>
+                    <div id="pattern-answer" style="margin-top:15px;"></div>
+                </div>
+            </div>`;
+        document.querySelector('.screen.active').insertAdjacentHTML('beforeend', html);
+        Navigation.pushContext('detail');
+    }
+
+    function checkPattern(index, answer) {
+        const item = PATTERN_DATA[index];
+        const ansEl = document.getElementById('pattern-answer');
+        const optEl = document.getElementById('pattern-options');
+        if (answer === item.answer) {
+            showToast('🎉 太聪明了！');
+            TTS.speakChinese('太聪明了，答对了！答案是' + item.answer);
+            if (optEl) optEl.innerHTML = `<p style="font-size:36px; color:#2ecc71; font-weight:700;">✅ ${item.answer}</p>`;
+        } else {
+            showToast('🤔 再想想');
+            TTS.speakChinese('再想想看');
+        }
+    }
+
     function handleCardClick(card) {
         const type = card.dataset.type;
         const index = parseInt(card.dataset.index);
@@ -308,6 +483,9 @@ const MathModule = (function() {
             case 'arithmetic': showArithmeticDetail(index, sub); break;
             case 'shape': showShapeDetail(index); break;
             case 'counting': showCountingDetail(index); break;
+            case 'time': showTimeDetail(index); break;
+            case 'compare': showCompareDetail(index); break;
+            case 'pattern': showPatternDetail(index); break;
         }
     }
 
@@ -318,6 +496,9 @@ const MathModule = (function() {
         showResult: showResult,
         playArithmetic: playArithmetic,
         playShape: playShape,
-        checkCounting: checkCounting
+        checkCounting: checkCounting,
+        playTime: playTime,
+        revealCompare: revealCompare,
+        checkPattern: checkPattern
     };
 })();

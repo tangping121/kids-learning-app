@@ -9,6 +9,9 @@ const ChineseModule = (function() {
             case 'hanzi': renderHanzi(container); break;
             case 'poetry': renderPoetry(container); break;
             case 'idiom': renderIdiom(container); break;
+            case 'sanZiJing': renderSanZiJing(container); break;
+            case 'baiJiaXing': renderBaiJiaXing(container); break;
+            case 'storyTalk': renderStoryTalk(container); break;
         }
     }
 
@@ -244,6 +247,143 @@ const ChineseModule = (function() {
         TTS.speakChinese(item.name + '。' + item.meaning + '。故事：' + item.story);
     }
 
+    // ====== 三字经 ======
+    function renderSanZiJing(container) {
+        let html = '<div class="content-grid">';
+        SANZIJING_LIST.forEach((item, i) => {
+            html += `<div class="content-card focusable" data-type="sanZiJing" data-index="${i}" style="font-family: 'STKaiti','KaiTi',serif;">
+                <div class="card-emoji">${item.emoji}</div>
+                <div class="card-text" style="font-size:24px;">${item.text}</div>
+                <div class="card-desc" style="font-size:13px;">${item.meaning}</div>
+            </div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+        Navigation.refreshFocusables();
+    }
+
+    function showSanZiJingDetail(index) {
+        const item = SANZIJING_LIST[index];
+        const html = `
+            <div class="detail-view fade-in">
+                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <div class="detail-main" style="flex-direction: column;">
+                    <div class="poetry-view">
+                        <div style="font-size:80px; margin-bottom:20px;">${item.emoji}</div>
+                        <div class="poetry-title" style="font-family: 'STKaiti','KaiTi',serif; font-size:48px;">${item.text}</div>
+                        <p style="font-size:26px; color: var(--color-gold); margin:25px 0;">💡 ${item.meaning}</p>
+                        <div class="detail-actions" style="margin-top:25px;">
+                            <button class="action-btn play-btn focusable" onclick="ChineseModule.playSanZiJing(${index})">🔊 听朗读</button>
+                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        document.querySelector('.screen.active').insertAdjacentHTML('beforeend', html);
+        Navigation.pushContext('detail');
+        setTimeout(() => playSanZiJing(index), 500);
+    }
+
+    function playSanZiJing(index) {
+        const item = SANZIJING_LIST[index];
+        TTS.speakChinese(item.text + '。' + item.meaning);
+    }
+
+    // ====== 百家姓 ======
+    function renderBaiJiaXing(container) {
+        let html = '<div class="content-grid" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));">';
+        BAIJIAXING_LIST.forEach((item, i) => {
+            html += `<div class="content-card focusable" data-type="baiJiaXing" data-index="${i}" style="min-height:140px;">
+                <div class="card-text" style="font-size:56px; color: var(--color-gold); font-family: 'STKaiti','KaiTi',serif;">${item.name}</div>
+                <div class="card-desc" style="font-size:14px;">${item.pinyin}</div>
+            </div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+        Navigation.refreshFocusables();
+    }
+
+    function showBaiJiaXingDetail(index) {
+        const item = BAIJIAXING_LIST[index];
+        const html = `
+            <div class="detail-view fade-in">
+                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <div class="detail-main">
+                    <div class="detail-display bounce" style="font-family: 'STKaiti','KaiTi',serif; color: var(--color-gold);">
+                        ${item.name}
+                    </div>
+                    <div class="detail-info">
+                        <h2 style="color: var(--color-gold);">姓${item.name} - ${item.pinyin}</h2>
+                        <p class="pinyin">拼音：${item.pinyin}</p>
+                        <p style="font-size:24px;">起源：${item.origin}</p>
+                        <div class="detail-actions">
+                            <button class="action-btn play-btn focusable" onclick="ChineseModule.playBaiJiaXing(${index})">🔊 读一读</button>
+                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        document.querySelector('.screen.active').insertAdjacentHTML('beforeend', html);
+        Navigation.pushContext('detail');
+        setTimeout(() => playBaiJiaXing(index), 400);
+    }
+
+    function playBaiJiaXing(index) {
+        const item = BAIJIAXING_LIST[index];
+        TTS.speakChinese('姓' + item.name + '，' + item.pinyin + '。' + item.origin);
+    }
+
+    // ====== 看图说话 ======
+    function renderStoryTalk(container) {
+        let html = '<div class="content-grid">';
+        STORYTALK_LIST.forEach((item, i) => {
+            html += `<div class="content-card focusable" data-type="storyTalk" data-index="${i}" style="min-height:180px;">
+                <div style="font-size:48px; margin-bottom:8px;">${item.emoji}</div>
+                <div class="card-desc" style="font-size:14px;">${item.scene.substring(0, 15)}…</div>
+            </div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+        Navigation.refreshFocusables();
+    }
+
+    function showStoryTalkDetail(index) {
+        const item = STORYTALK_LIST[index];
+        const html = `
+            <div class="detail-view fade-in">
+                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <div class="detail-main" style="flex-direction: column; max-width: 800px;">
+                    <div style="font-size:80px; margin-bottom:15px;">${item.emoji}</div>
+                    <p style="font-size:28px; line-height:1.8; text-align:center;">${item.scene}</p>
+                    <p style="font-size:26px; color: var(--color-gold); margin-top:20px;">❓ ${item.question}</p>
+                    <p style="font-size:14px; color: var(--color-text-dim);">💡 提示：${item.hint}</p>
+                    <div class="detail-actions" style="margin-top:20px;">
+                        <button class="action-btn play-btn focusable" onclick="ChineseModule.playStoryTalk(${index})">🔊 听描述</button>
+                        <button class="action-btn next-btn focusable" onclick="ChineseModule.revealAnswer(${index})">👀 看答案</button>
+                        <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                    </div>
+                    <div id="story-answer" style="margin-top:15px;"></div>
+                </div>
+            </div>`;
+        document.querySelector('.screen.active').insertAdjacentHTML('beforeend', html);
+        Navigation.pushContext('detail');
+        setTimeout(() => playStoryTalk(index), 500);
+    }
+
+    function playStoryTalk(index) {
+        const item = STORYTALK_LIST[index];
+        TTS.speakChinese(item.scene + '。' + item.question);
+    }
+
+    function revealAnswer(index) {
+        const item = STORYTALK_LIST[index];
+        const answerEl = document.getElementById('story-answer');
+        if (answerEl) {
+            answerEl.innerHTML = `<div class="bounce" style="font-size:36px; color:#2ecc71; font-weight:700;">✅ ${item.answer}</div>`;
+            TTS.speakChinese('答案是：' + item.answer);
+        }
+    }
+
     // 处理卡片点击
     function handleCardClick(card) {
         const type = card.dataset.type;
@@ -255,6 +395,9 @@ const ChineseModule = (function() {
             case 'hanzi': showHanziDetail(index); break;
             case 'poetry': showPoetryDetail(index); break;
             case 'idiom': showIdiomDetail(index); break;
+            case 'sanZiJing': showSanZiJingDetail(index); break;
+            case 'baiJiaXing': showBaiJiaXingDetail(index); break;
+            case 'storyTalk': showStoryTalkDetail(index); break;
         }
     }
 
@@ -265,6 +408,10 @@ const ChineseModule = (function() {
         playHanzi: playHanzi,
         strokeDemo: strokeDemo,
         playPoetry: playPoetry,
-        playIdiom: playIdiom
+        playIdiom: playIdiom,
+        playSanZiJing: playSanZiJing,
+        playBaiJiaXing: playBaiJiaXing,
+        playStoryTalk: playStoryTalk,
+        revealAnswer: revealAnswer
     };
 })();

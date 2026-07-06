@@ -166,3 +166,65 @@ const IDIOM_LIST = [
     { name: '井底之蛙', pinyin: 'jǐng dǐ zhī wā', meaning: '见识短浅', story: '井里的青蛙以为天只有井口那么大，后来才知道天很大很大。' },
     { name: '狐假虎威', pinyin: 'hú jiǎ hǔ wēi', meaning: '借别人的势力欺负人', story: '狐狸被老虎抓住后，骗老虎说自己是天帝派来的，带着老虎在森林走，动物们都吓跑了。' }
 ];
+
+// 三字经
+const SANZIJING_LIST = [
+    { text: '人之初，性本善。', meaning: '人刚出生时，本性都是善良的。', emoji: '👶' },
+    { text: '性相近，习相远。', meaning: '本性虽然相近，后天的习惯让人变得不同。', emoji: '🛤️' },
+    { text: '苟不教，性乃迁。', meaning: '如果不加以教育，善良的本性就会改变。', emoji: '📚' },
+    { text: '教之道，贵以专。', meaning: '教育的方法，最重要的是专心一致。', emoji: '🎯' },
+    { text: '昔孟母，择邻处。', meaning: '从前孟子的母亲，选择好的邻居居住。', emoji: '🏠' },
+    { text: '子不学，断机杼。', meaning: '孟子逃学，母亲剪断织布机上的线来教育他。', emoji: '✂️' },
+    { text: '玉不琢，不成器。', meaning: '玉石不雕琢，就不能成为有用的器物。', emoji: '💎' },
+    { text: '人不学，不知义。', meaning: '人不学习，就不懂得做人的道理。', emoji: '📖' },
+    { text: '为人子，方少时。', meaning: '做子女的，在年少的时候。', emoji: '👦' },
+    { text: '亲师友，习礼仪。', meaning: '要亲近老师和朋友，学习礼仪。', emoji: '🙏' },
+    { text: '香九龄，能温席。', meaning: '黄香九岁时就知道替父亲温暖被窝。', emoji: '🛏️' },
+    { text: '孝于亲，所当执。', meaning: '孝敬父母，是每个人应该做到的。', emoji: '❤️' },
+    { text: '融四岁，能让梨。', meaning: '孔融四岁时，就知道把大梨让给哥哥。', emoji: '🍐' },
+    { text: '弟于长，宜先知。', meaning: '尊敬兄长，这是从小就应该知道的道理。', emoji: '🤝' },
+    { text: '首孝悌，次见闻。', meaning: '首先要懂得孝悌，其次要增长见闻。', emoji: '🌟' },
+    { text: '知某数，识某文。', meaning: '要知道数目，认识文字。', emoji: '🔢' }
+];
+
+// 百家姓
+const BAIJIAXING_LIST = [
+    { name: '赵', pinyin: 'Zhào', origin: '宋朝国姓' },
+    { name: '钱', pinyin: 'Qián', origin: '吴越国姓' },
+    { name: '孙', pinyin: 'Sūn', origin: '周文王后代' },
+    { name: '李', pinyin: 'Lǐ', origin: '唐朝国姓' },
+    { name: '周', pinyin: 'Zhōu', origin: '周朝王室后裔' },
+    { name: '吴', pinyin: 'Wú', origin: '周太王后代' },
+    { name: '郑', pinyin: 'Zhèng', origin: '周宣王封地' },
+    { name: '王', pinyin: 'Wáng', origin: '帝王之后' },
+    { name: '冯', pinyin: 'Féng', origin: '周文王第十五子后裔' },
+    { name: '陈', pinyin: 'Chén', origin: '舜帝后代' },
+    { name: '褚', pinyin: 'Chǔ', origin: '宋国公子后裔' },
+    { name: '卫', pinyin: 'Wèi', origin: '周文王第九子后裔' },
+    { name: '蒋', pinyin: 'Jiǎng', origin: '周公第三子后裔' },
+    { name: '沈', pinyin: 'Shěn', origin: '周文王第十子后裔' },
+    { name: '韩', pinyin: 'Hán', origin: '韩国后裔' },
+    { name: '杨', pinyin: 'Yáng', origin: '隋朝国姓' },
+    { name: '朱', pinyin: 'Zhū', origin: '明朝国姓' },
+    { name: '秦', pinyin: 'Qín', origin: '秦国后裔' },
+    { name: '许', pinyin: 'Xǔ', origin: '尧帝后裔' },
+    { name: '何', pinyin: 'Hé', origin: '韩姓分化' },
+    { name: '吕', pinyin: 'Lǚ', origin: '姜太公后裔' },
+    { name: '张', pinyin: 'Zhāng', origin: '黄帝赐姓' },
+    { name: '孔', pinyin: 'Kǒng', origin: '孔子后代' },
+    { name: '曹', pinyin: 'Cáo', origin: '周文王第六子后裔' }
+];
+
+// 看图说话
+const STORYTALK_LIST = [
+    { emoji: '🌅🏔️🚶', scene: '早晨，小明背着书包走在上学的路上', question: '小明要去哪里？', answer: '去上学', hint: '看小明的书包' },
+    { emoji: '🌳🐦🐤', scene: '大树上，鸟妈妈正在喂小鸟吃虫子', question: '鸟妈妈在做什么？', answer: '喂小鸟', hint: '看鸟嘴里叼着什么' },
+    { emoji: '🌧️☔👧', scene: '下大雨了，小红打着伞走在路上', question: '天怎么了？', answer: '下雨了', hint: '看小红的伞' },
+    { emoji: '🏫📚👦👧', scene: '教室里，同学们正在认真读书', question: '同学们在哪里？', answer: '在教室', hint: '看桌子和书本' },
+    { emoji: '🌙🛏️😴', scene: '夜晚，小朋友躺在床上睡着了', question: '现在是什么时候？', answer: '晚上', hint: '看窗外的月亮' },
+    { emoji: '🍎🧺🐰', scene: '小兔子在果园里摘苹果，篮子装满了', question: '小兔子在做什么？', answer: '摘苹果', hint: '看篮子里的苹果' },
+    { emoji: '⚽🏃👦👦', scene: '操场上，两个小朋友在踢足球', question: '小朋友在做什么运动？', answer: '踢足球', hint: '看脚边的球' },
+    { emoji: '🌻🐝🌺', scene: '花园里，小蜜蜂在花丛中飞来飞去采蜜', question: '小蜜蜂在做什么？', answer: '采蜜', hint: '看蜜蜂在花上' },
+    { emoji: '🎨🖌️👧🌈', scene: '小红拿着画笔在画彩虹，画得真漂亮', question: '小红在做什么？', answer: '画画', hint: '看她手里的画笔' },
+    { emoji: '🐶🦴🏠', scene: '小狗在院子里啃骨头，它的家就在旁边', question: '小狗在啃什么？', answer: '骨头', hint: '看小狗嘴边' }
+];

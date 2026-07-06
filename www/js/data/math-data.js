@@ -80,3 +80,46 @@ const COUNTING_DATA = [
     { question: '数一数有几条小鱼？', emoji: '🐟', count: 2, options: [1, 2, 3], answer: 2 },
     { question: '数一数有几棵树？', emoji: '🌳', count: 9, options: [8, 9, 10], answer: 9 }
 ];
+
+// 时间认知
+const TIME_DATA = [
+    { hour: 7, minute: 0, desc: '早上7点', event: '起床啦！☀️', emoji: '⏰' },
+    { hour: 7, minute: 30, desc: '早上7点半', event: '吃早餐 🥣', emoji: '🍳' },
+    { hour: 8, minute: 0, desc: '早上8点', event: '去上学 🏫', emoji: '🎒' },
+    { hour: 12, minute: 0, desc: '中午12点', event: '吃午饭 🍚', emoji: '🍱' },
+    { hour: 12, minute: 30, desc: '中午12点半', event: '睡午觉 😴', emoji: '🛏️' },
+    { hour: 3, minute: 0, desc: '下午3点', event: '做运动 ⚽', emoji: '🏃' },
+    { hour: 5, minute: 0, desc: '下午5点', event: '放学回家 🏠', emoji: '🚶' },
+    { hour: 6, minute: 0, desc: '下午6点', event: '吃晚饭 🍽️', emoji: '🍲' },
+    { hour: 7, minute: 0, desc: '晚上7点', event: '写作业 ✏️', emoji: '📝' },
+    { hour: 8, minute: 30, desc: '晚上8点半', event: '准备睡觉 🌙', emoji: '🛌' },
+    { hour: 9, minute: 0, desc: '晚上9点', event: '晚安睡觉 💤', emoji: '😴' }
+];
+
+// 比较大小
+const COMPARE_DATA = [
+    { left: '🐘', right: '🐭', leftName: '大象', rightName: '老鼠', answer: '>', question: '谁更大？', bigger: 'left' },
+    { left: '🏖️', right: '🏔️', leftName: '沙堆', rightName: '高山', answer: '<', question: '谁更高？', bigger: 'right' },
+    { left: '🍉', right: '🍇', leftName: '西瓜', rightName: '葡萄', answer: '>', question: '谁更大？', bigger: 'left' },
+    { left: '🚗', right: '🚲', leftName: '汽车', rightName: '自行车', answer: '>', question: '谁更大？', bigger: 'left' },
+    { left: '🐜', right: '🐕', leftName: '蚂蚁', rightName: '小狗', answer: '<', question: '谁更小？', bigger: 'right' },
+    { left: '5', right: '3', leftName: '5', rightName: '3', answer: '>', question: '哪个数更大？', bigger: 'left' },
+    { left: '2', right: '7', leftName: '2', rightName: '7', answer: '<', question: '哪个数更大？', bigger: 'right' },
+    { left: '8', right: '8', leftName: '8', rightName: '8', answer: '=', question: '它们谁大？', bigger: 'equal' },
+    { left: '🦁', right: '🐱', leftName: '狮子', rightName: '小猫', answer: '>', question: '谁更大？', bigger: 'left' },
+    { left: '9', right: '6', leftName: '9', rightName: '6', answer: '>', question: '哪个数更大？', bigger: 'left' }
+];
+
+// 规律推理
+const PATTERN_DATA = [
+    { sequence: ['🔴', '🔵', '🔴', '🔵', '🔴'], answer: '🔵', options: ['🔵', '🟢', '🔴'], hint: '红蓝交替' },
+    { sequence: ['⭐', '⭐', '🌙', '⭐', '⭐'], answer: '🌙', options: ['⭐', '🌙', '☀️'], hint: '两星一月' },
+    { sequence: ['1', '2', '3', '4', '5'], answer: '6', options: ['7', '6', '8'], hint: '数字递增' },
+    { sequence: ['2', '4', '6', '8'], answer: '10', options: ['9', '10', '12'], hint: '偶数递增' },
+    { sequence: ['🌸', '🌸', '🌺', '🌸', '🌸'], answer: '🌺', options: ['🌸', '🌺', '🌻'], hint: '两樱花一红花' },
+    { sequence: ['🍎', '🍌', '🍎', '🍌', '🍎'], answer: '🍌', options: ['🍎', '🍌', '🍇'], hint: '苹果香蕉交替' },
+    { sequence: ['1', '3', '5', '7'], answer: '9', options: ['8', '9', '10'], hint: '奇数递增' },
+    { sequence: ['🐶', '🐱', '🐶', '🐱', '🐶'], answer: '🐱', options: ['🐶', '🐱', '🐰'], hint: '狗猫交替' },
+    { sequence: ['🔵', '🔵', '🔴', '🔵', '🔵'], answer: '🔴', options: ['🔵', '🔴', '🟢'], hint: '两蓝一红' },
+    { sequence: ['10', '9', '8', '7'], answer: '6', options: ['5', '6', '7'], hint: '倒序递减' }
+];

@@ -1,0 +1,9 @@
+// Capacitor Build Gradle
+// Auto-generated for kids-learning-app
+
+android {
+}
+
+dependencies {
+    implementation project(':capacitor-android')
+}
