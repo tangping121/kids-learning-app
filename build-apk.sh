@@ -190,8 +190,10 @@ apply_tv_config() {
     # AndroidManifest.xml 已在 android/ 目录中配置好
     # 验证关键配置
     local manifest="$ANDROID_DIR/app/src/main/AndroidManifest.xml"
-    if grep -q "leanback" "$manifest" && grep -q "sensorLandscape" "$manifest"; then
-        success "AndroidManifest.xml: TV + 横屏配置已就绪"
+    if grep -q "leanback" "$manifest" && grep -q "fullSensor" "$manifest"; then
+        success "AndroidManifest.xml: TV + 触屏旋转配置已就绪"
+    elif grep -q "leanback" "$manifest"; then
+        success "AndroidManifest.xml: TV 配置已就绪"
     else
         warn "AndroidManifest.xml 可能缺少 TV 配置，请手动检查"
     fi

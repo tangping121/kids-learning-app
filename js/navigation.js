@@ -13,8 +13,9 @@ const Navigation = (function() {
     let touchStartX = 0;
     let touchStartY = 0;
     let touchStartTime = 0;
-    const SWIPE_THRESHOLD = 80; // 滑动距离阈值
-    const SWIPE_TIME = 500; // 滑动时间阈值(ms)
+    const SWIPE_THRESHOLD = 60; // 滑动距离阈值
+    const SWIPE_TIME = 600; // 滑动时间阈值(ms)
+    const SWIPE_EDGE = 80; // 左边缘范围
 
     // 遥控器键码映射
     const KEY_MAP = {
@@ -69,13 +70,21 @@ const Navigation = (function() {
         const dy = e.changedTouches[0].clientY - touchStartY;
         const dt = Date.now() - touchStartTime;
 
-        // 只在详情视图中响应滑动返回（从左边缘向右滑）
-        if (dt < SWIPE_TIME && Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.5) {
-            if (dx > 0 && touchStartX < 50) {
-                // 从左边缘右滑 → 返回
+        // 详情页和子页面中响应滑动返回（从左边缘向右滑）
+        if (dt < SWIPE_TIME && Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.2) {
+            if (dx > 0 && touchStartX < SWIPE_EDGE) {
                 handleBack();
             }
         }
+    }
+
+    // 供 App 判断本次触摸是否为边缘滑动返回，避免与点击冲突
+    function consumeSwipe(dx, dy, dt) {
+        return dt < SWIPE_TIME &&
+            Math.abs(dx) > SWIPE_THRESHOLD &&
+            Math.abs(dx) > Math.abs(dy) * 1.2 &&
+            dx > 0 &&
+            touchStartX < SWIPE_EDGE;
     }
 
     function handleKeyDown(e) {
@@ -282,6 +291,7 @@ const Navigation = (function() {
         handleBack: handleBack,
         getCurrentFocused: getCurrentFocused,
         pushContext: pushContext,
-        popContext: popContext
+        popContext: popContext,
+        consumeSwipe: consumeSwipe
     };
 })();

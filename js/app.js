@@ -88,30 +88,61 @@ const App = (function() {
     }
 
     function setupCardClicks() {
-        // 鼠标/触摸点击支持
-        document.addEventListener('click', function(e) {
-            const card = e.target.closest('.content-card[data-type], .home-card, .sub-nav-item, .letter-card[data-type]');
-            if (!card) return;
+        const TAP_MOVE = 15;
+        const TAP_TIME = 500;
+        let lastTouchEnd = 0;
+        let touchStart = null;
 
-            // 如果是详情视图内的按钮，不处理
-            if (card.closest('.detail-actions')) return;
+        function resolveElement(el) {
+            if (!el) return null;
+            if (el.nodeType === Node.ELEMENT_NODE) return el;
+            if (el.nodeType === Node.TEXT_NODE) return el.parentElement;
+            return null;
+        }
 
-            // 主页卡片
-            if (card.classList.contains('home-card')) {
-                const screen = card.dataset.screen;
-                navigateTo(screen);
+        function elementAtTouch(touch) {
+            const el = document.elementFromPoint(touch.clientX, touch.clientY);
+            return resolveElement(el);
+        }
+
+        function handleTapOnElement(rawTarget) {
+            const target = resolveElement(rawTarget);
+            if (!target || !target.closest) return;
+
+            // 详情页按钮（WebView 中 inline onclick 可能不触发）
+            const btn = target.closest('.action-btn, .back-btn');
+            if (btn) {
+                const onclickAttr = btn.getAttribute('onclick');
+                if (onclickAttr) {
+                    try {
+                        new Function(onclickAttr).call(btn);
+                    } catch (err) {
+                        console.error('onclick执行失败:', err);
+                    }
+                }
                 return;
             }
 
-            // 子导航
+            const card = target.closest(
+                '.content-card, .home-card, .sub-nav-item, .letter-card'
+            );
+            if (!card) return;
+
+            if (card.classList.contains('home-card')) {
+                const screen = card.dataset.screen;
+                if (screen) navigateTo(screen);
+                return;
+            }
+
             if (card.classList.contains('sub-nav-item')) {
                 const module = card.dataset.module;
                 const parentScreen = card.closest('.screen');
-                selectSubNav(parentScreen, module, card);
+                if (module && parentScreen) {
+                    selectSubNav(parentScreen, module, card);
+                }
                 return;
             }
 
-            // 内容卡片
             if (card.classList.contains('content-card') || card.classList.contains('letter-card')) {
                 const screen = card.closest('.screen');
                 if (screen) {
@@ -121,11 +152,63 @@ const App = (function() {
                         moduleObj.module.handleCardClick(card);
                     }
                 }
+            }
+        }
+
+        // 触屏：touchstart 记录起点与目标，touchend 判定为点击后再跳转
+        document.addEventListener('touchstart', function(e) {
+            if (!e.touches || e.touches.length !== 1) {
+                touchStart = null;
                 return;
             }
+            const t = e.touches[0];
+            touchStart = {
+                x: t.clientX,
+                y: t.clientY,
+                el: elementAtTouch(t),
+                time: Date.now()
+            };
+        }, { passive: true, capture: true });
+
+        document.addEventListener('touchend', function(e) {
+            if (!touchStart || !e.changedTouches || e.changedTouches.length !== 1) {
+                touchStart = null;
+                return;
+            }
+
+            const t = e.changedTouches[0];
+            const dx = t.clientX - touchStart.x;
+            const dy = t.clientY - touchStart.y;
+            const dt = Date.now() - touchStart.time;
+            const startEl = touchStart.el;
+            touchStart = null;
+
+            if (Math.abs(dx) > TAP_MOVE || Math.abs(dy) > TAP_MOVE || dt > TAP_TIME) return;
+            if (Navigation.consumeSwipe && Navigation.consumeSwipe(dx, dy, dt)) return;
+
+            lastTouchEnd = Date.now();
+            const target = elementAtTouch(t) || startEl;
+            if (target) {
+                handleTapOnElement(target);
+                e.preventDefault();
+            }
+        }, { passive: false, capture: true });
+
+        // 鼠标 / TV 遥控器 click
+        document.addEventListener('click', function(e) {
+            if (Date.now() - lastTouchEnd < 400) return;
+            handleTapOnElement(e.target);
         });
 
-        // 鼠标悬停焦点
+        // pointer 兜底（部分 WebView 对 touch 事件支持不完整）
+        document.addEventListener('pointerup', function(e) {
+            if (e.pointerType !== 'touch') return;
+            if (Date.now() - lastTouchEnd < 400) return;
+            lastTouchEnd = Date.now();
+            handleTapOnElement(e.target);
+        });
+
+        // 鼠标悬停焦点（仅桌面端）
         document.addEventListener('mouseover', function(e) {
             const focusable = e.target.closest('.focusable');
             if (focusable && !focusable.closest('.detail-actions')) {

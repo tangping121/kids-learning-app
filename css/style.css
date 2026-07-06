@@ -185,6 +185,8 @@ html, body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
     transition: var(--transition);
     position: relative;
     overflow: hidden;
@@ -306,6 +308,8 @@ html, body {
     background: rgba(255, 255, 255, 0.06);
     border: 2px solid transparent;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
     transition: var(--transition);
     white-space: nowrap;
 }
@@ -361,6 +365,8 @@ html, body {
     padding: 20px;
     text-align: center;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
     transition: var(--transition);
     min-height: 180px;
     display: flex;
