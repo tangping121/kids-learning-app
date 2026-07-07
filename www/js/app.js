@@ -15,22 +15,19 @@ const App = (function() {
     let isTouchDevice = false;
 
     function init() {
-        dbgLog('App.init() 开始');
-        try {
-            TTS.init();
-            Navigation.init();
-            detectDeviceMode();
-            setupClock();
-            setupBackgroundEffects();
-            setupInteraction();
-            dbgLog('App.init() 完成, isTouch=' + isTouchDevice);
-        } catch(err) {
-            dbgLog('App.init() 错误: ' + err.message);
-        }
+        // 最关键：先绑定交互事件，确保即使其他模块出错也能点击
+        try { setupInteraction(); } catch(err) {}
+
+        // 其余模块逐个 try-catch，任何失败不影响交互
+        try { detectDeviceMode(); } catch(e) {}
+        try { Navigation.init(); } catch(e) {}
+        try { TTS.init(); } catch(e) {}
+        try { setupClock(); } catch(e) {}
+        try { setupBackgroundEffects(); } catch(e) {}
 
         if (!isTouchDevice) {
-            setTimeout(() => {
-                const firstCard = document.querySelector('.home-card');
+            setTimeout(function() {
+                var firstCard = document.querySelector('.home-card');
                 if (firstCard) firstCard.classList.add('focused');
             }, 100);
         }
@@ -104,10 +101,6 @@ const App = (function() {
             var now = Date.now();
             if (now - lastActionTime < 500) return;
             lastActionTime = now;
-
-            // 调试日志（显示在屏幕上）
-            dbgLog(source + ': ' + (target.className || target.tagName || 'unknown'));
-
             handleAction(target);
         }
 
@@ -353,19 +346,3 @@ function showToast(message, duration) {
 }
 
 document.addEventListener('DOMContentLoaded', App.init);
-
-// ====== 调试日志（屏幕显示） ======
-function dbgLog(msg) {
-    var el = document.getElementById('dbg-log');
-    if (!el) {
-        el = document.createElement('div');
-        el.id = 'dbg-log';
-        el.style.cssText = 'position:fixed;bottom:50px;left:10px;right:10px;max-height:200px;overflow-y:auto;background:rgba(0,0,0,0.9);color:#0f0;font-size:12px;padding:8px;border-radius:8px;z-index:9999;font-family:monospace;pointer-events:none;';
-        document.body.appendChild(el);
-    }
-    var time = new Date().toLocaleTimeString();
-    el.innerHTML = '<div>[' + time + '] ' + msg + '</div>' + el.innerHTML;
-    // 最多保留20条
-    var items = el.children;
-    while (items.length > 20) el.removeChild(el.lastChild);
-}
