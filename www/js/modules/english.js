@@ -1,5 +1,6 @@
 /**
  * 英语模块
+ * v1.4 - 去掉 inline onclick，改用 data-action
  */
 const EnglishModule = (function() {
 
@@ -33,7 +34,7 @@ const EnglishModule = (function() {
         const item = ALPHABET_DATA[index];
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main">
                     <div class="detail-display bounce" style="flex-direction: column; color: #2ecc71;">
                         <div style="font-size: 200px;">${item.upper}</div>
@@ -46,9 +47,9 @@ const EnglishModule = (function() {
                         <p style="font-size: 22px;">中文：${item.cn}</p>
                         <p style="font-size: 80px;">${item.emoji}</p>
                         <div class="detail-actions">
-                            <button class="action-btn play-btn focusable" onclick="EnglishModule.playAlphabet(${index})">🔊 听发音</button>
-                            <button class="action-btn next-btn focusable" onclick="EnglishModule.playAlphabetWord(${index})">📖 读单词</button>
-                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                            <button class="action-btn play-btn focusable" data-action="playAlphabet" data-p1="${index}">🔊 听发音</button>
+                            <button class="action-btn next-btn focusable" data-action="playAlphabetWord" data-p1="${index}">📖 读单词</button>
+                            <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                         </div>
                     </div>
                 </div>
@@ -75,7 +76,6 @@ const EnglishModule = (function() {
         Object.keys(WORDS_DATA).forEach(category => {
             html += `<div class="content-card focusable section-header" style="grid-column: 1/-1; background: rgba(46,204,113,0.15);"><h2 style="font-size:30px;">📦 ${category}</h2></div>`;
             WORDS_DATA[category].forEach((item, i) => {
-                const globalIndex = category + '-' + i;
                 html += `<div class="content-card focusable" data-type="word" data-cat="${category}" data-index="${i}">
                     <div class="card-emoji">${item.emoji}</div>
                     <div class="card-text" style="font-size:26px; color: #2ecc71;">${item.en}</div>
@@ -91,7 +91,7 @@ const EnglishModule = (function() {
         const item = WORDS_DATA[cat][index];
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main">
                     <div class="detail-display bounce" style="font-size: 140px;">
                         ${item.emoji}
@@ -101,8 +101,8 @@ const EnglishModule = (function() {
                         <p style="font-size: 28px;">中文：${item.cn}</p>
                         <p style="font-size: 20px; color: var(--color-text-dim);">分类：${cat}</p>
                         <div class="detail-actions">
-                            <button class="action-btn play-btn focusable" onclick="EnglishModule.playWord('${item.en}', '${item.cn}')">🔊 读单词</button>
-                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                            <button class="action-btn play-btn focusable" data-action="playWord" data-p1="${item.en}" data-p2="${item.cn}">🔊 读单词</button>
+                            <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                         </div>
                     </div>
                 </div>
@@ -152,14 +152,14 @@ const EnglishModule = (function() {
 
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main" style="flex-direction: column;">
                     <h2 style="font-size: 36px; color: #2ecc71; margin-bottom: 20px;">💬 ${item.title}</h2>
                     <div class="dialogue-view">${linesHtml}</div>
                     <div class="detail-actions" style="margin-top: 25px;">
-                        <button class="action-btn play-btn focusable" onclick="EnglishModule.playDialogue(${index})">🔊 听对话</button>
-                        <button class="action-btn next-btn focusable" onclick="EnglishModule.playDialogueCN(${index})">🔊 中文翻译</button>
-                        <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                        <button class="action-btn play-btn focusable" data-action="playDialogue" data-p1="${index}">🔊 听对话</button>
+                        <button class="action-btn next-btn focusable" data-action="playDialogueCN" data-p1="${index}">🔊 中文翻译</button>
+                        <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                     </div>
                 </div>
             </div>
@@ -181,9 +181,7 @@ const EnglishModule = (function() {
     function playDialogueCN(index) {
         const item = DIALOGUE_DATA[index];
         let text = '';
-        item.lines.forEach(line => {
-            text += line.cn + '。';
-        });
+        item.lines.forEach(line => { text += line.cn + '。'; });
         TTS.speakChinese(text);
     }
 
@@ -211,15 +209,15 @@ const EnglishModule = (function() {
 
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main" style="flex-direction: column;">
                     <div class="song-view">
                         <div class="song-title">🎵 ${item.title}</div>
                         <p style="color: var(--color-text-dim); margin-bottom: 20px;">${item.cn}</p>
                         <div class="song-lyrics">${lyricsHtml}</div>
                         <div class="detail-actions" style="margin-top: 25px;">
-                            <button class="action-btn play-btn focusable" onclick="EnglishModule.playSong(${index})">🔊 唱一唱</button>
-                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                            <button class="action-btn play-btn focusable" data-action="playSong" data-p1="${index}">🔊 唱一唱</button>
+                            <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                         </div>
                     </div>
                 </div>
@@ -255,7 +253,7 @@ const EnglishModule = (function() {
         const item = COLOR_SHAPE_DATA[index];
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main">
                     <div class="detail-display bounce" style="font-size:140px;">
                         ${item.emoji}
@@ -265,8 +263,8 @@ const EnglishModule = (function() {
                         <p style="font-size:28px;">中文：${item.cn}</p>
                         <div style="width:100px; height:100px; background:${item.color}; border-radius:16px; margin:15px 0;"></div>
                         <div class="detail-actions">
-                            <button class="action-btn play-btn focusable" onclick="EnglishModule.playColorShape(${index})">🔊 读一读</button>
-                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                            <button class="action-btn play-btn focusable" data-action="playColorShape" data-p1="${index}">🔊 读一读</button>
+                            <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                         </div>
                     </div>
                 </div>
@@ -303,7 +301,7 @@ const EnglishModule = (function() {
         const item = NUM_EN_DATA[index];
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main">
                     <div class="detail-display bounce" style="color:#2ecc71;">
                         ${item.num}
@@ -313,8 +311,8 @@ const EnglishModule = (function() {
                         <p style="font-size:28px;">中文：${item.cn}</p>
                         <p style="font-size:20px; color:var(--color-text-dim);">数字 ${item.num} 的英文</p>
                         <div class="detail-actions">
-                            <button class="action-btn play-btn focusable" onclick="EnglishModule.playNumEn(${index})">🔊 读一读</button>
-                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                            <button class="action-btn play-btn focusable" data-action="playNumEn" data-p1="${index}">🔊 读一读</button>
+                            <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                         </div>
                     </div>
                 </div>
@@ -349,12 +347,12 @@ const EnglishModule = (function() {
     function showQuizDetail(index) {
         const item = QUIZ_DATA[index];
         let optHtml = item.options.map((o, i) =>
-            `<button class="action-btn focusable" onclick="EnglishModule.checkQuiz(${index},${i})">${o.en} (${o.cn})</button>`
+            `<button class="action-btn focusable" data-action="checkQuiz" data-p1="${index}" data-p2="${i}">${o.en} (${o.cn})</button>`
         ).join('');
 
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main" style="flex-direction:column;">
                     <div style="font-size:80px; margin-bottom:15px;">${item.image}</div>
                     <h2 style="font-size:32px; color:#2ecc71; margin-bottom:8px;">${item.question}</h2>

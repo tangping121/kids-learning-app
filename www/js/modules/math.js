@@ -1,5 +1,6 @@
 /**
  * 数学模块
+ * v1.4 - 去掉 inline onclick，改用 data-action
  */
 const MathModule = (function() {
 
@@ -39,7 +40,7 @@ const MathModule = (function() {
 
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main">
                     <div class="detail-display bounce" style="color: #3498db; font-size: 180px;">
                         ${item.num}
@@ -50,8 +51,8 @@ const MathModule = (function() {
                         <p style="font-size: 28px;">中文写作：<span style="color: var(--color-gold); font-size: 36px;">${item.word}</span></p>
                         <div class="math-objects" style="max-width: 400px;">${objectsHtml}</div>
                         <div class="detail-actions" style="margin-top: 20px;">
-                            <button class="action-btn play-btn focusable" onclick="MathModule.playNumber(${index})">🔊 读数字</button>
-                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                            <button class="action-btn play-btn focusable" data-action="playNumber" data-p1="${index}">🔊 读数字</button>
+                            <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                         </div>
                     </div>
                 </div>
@@ -101,11 +102,10 @@ const MathModule = (function() {
         }
 
         const symbol = sub === 'add' ? '+' : '-';
-        const opText = sub === 'add' ? '加' : '减';
 
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main" style="flex-direction: column;">
                     <div class="arithmetic-display" style="margin-bottom: 20px;">
                         <span style="color: #3498db;">${item.a}</span>
@@ -130,9 +130,9 @@ const MathModule = (function() {
                         </div>
                     </div>
                     <div class="detail-actions">
-                        <button class="action-btn play-btn focusable" onclick="MathModule.showResult(${index}, '${sub}')">🔍 看答案</button>
-                        <button class="action-btn next-btn focusable" onclick="MathModule.playArithmetic(${index}, '${sub}')">🔊 听一听</button>
-                        <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                        <button class="action-btn play-btn focusable" data-action="showResult" data-p1="${index}" data-p2="${sub}">🔍 看答案</button>
+                        <button class="action-btn next-btn focusable" data-action="playArithmetic" data-p1="${index}" data-p2="${sub}">🔊 听一听</button>
+                        <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                     </div>
                 </div>
             </div>
@@ -146,7 +146,6 @@ const MathModule = (function() {
         const item = sub === 'add' ? ADDITION_PROBLEMS[index] : SUBTRACTION_PROBLEMS[index];
         const resultEl = document.getElementById('result-num');
         if (resultEl) {
-            // 动画显示结果
             let current = 0;
             const target = item.result;
             const interval = setInterval(() => {
@@ -157,7 +156,6 @@ const MathModule = (function() {
                     clearInterval(interval);
                     resultEl.style.color = '#2ecc71';
                     resultEl.classList.add('bounce');
-                    // 撒花效果
                     showToast('🎉 答对了！' + item.a + (sub === 'add' ? ' 加 ' : ' 减 ') + item.b + ' 等于 ' + item.result);
                     TTS.speakChinese(item.a + (sub === 'add' ? '加' : '减') + item.b + '等于' + item.result);
                 }
@@ -194,7 +192,7 @@ const MathModule = (function() {
         const item = SHAPES_DATA[index];
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main">
                     <div class="shape-canvas bounce" style="background: rgba(255,255,255,0.05); border-radius: 30px; border: 3px solid ${item.color};">
                         <svg viewBox="0 0 100 100" style="width:200px; height:200px;">
@@ -209,8 +207,8 @@ const MathModule = (function() {
                         <p class="pinyin">拼音：${item.pinyin}</p>
                         <p style="font-size: 26px;">${item.desc}</p>
                         <div class="detail-actions">
-                            <button class="action-btn play-btn focusable" onclick="MathModule.playShape(${index})">🔊 读一读</button>
-                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                            <button class="action-btn play-btn focusable" data-action="playShape" data-p1="${index}">🔊 读一读</button>
+                            <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                         </div>
                     </div>
                 </div>
@@ -259,12 +257,12 @@ const MathModule = (function() {
 
         let optionsHtml = '';
         item.options.forEach((opt, i) => {
-            optionsHtml += `<button class="action-btn focusable ${opt === item.answer ? 'play-btn' : ''}" onclick="MathModule.checkCounting(${index}, ${opt})">${opt}</button>`;
+            optionsHtml += `<button class="action-btn focusable ${opt === item.answer ? 'play-btn' : ''}" data-action="checkCounting" data-p1="${index}" data-p2="${opt}">${opt}</button>`;
         });
 
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main" style="flex-direction: column;">
                     <h2 style="font-size: 32px; color: var(--color-gold); margin-bottom: 20px;">${item.question}</h2>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; max-width: 600px; margin-bottom: 30px;">
@@ -291,7 +289,7 @@ const MathModule = (function() {
             if (options) {
                 options.innerHTML = `<div style="font-size: 80px; animation: bounce 0.5s ease 3;">🎉</div>
                     <p style="font-size: 28px; color: #2ecc71;">正确答案是 ${item.answer} 个！</p>
-                    <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 完成</button>`;
+                    <button class="action-btn close-btn focusable" data-action="back">✕ 完成</button>`;
                 Navigation.refreshFocusables();
             }
         } else {
@@ -321,7 +319,7 @@ const MathModule = (function() {
         const mAngle = item.minute * 6;
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main">
                     <div class="detail-display bounce" style="width:300px; height:300px;">
                         <svg viewBox="0 0 200 200" style="width:280px; height:280px;">
@@ -341,8 +339,8 @@ const MathModule = (function() {
                         <p style="font-size:36px;">${item.event}</p>
                         <p style="font-size:20px; color:var(--color-text-dim); margin-top:10px;">时针指向 ${item.hour % 12 || 12}，分针指向 ${item.minute === 0 ? '12' : item.minute}</p>
                         <div class="detail-actions">
-                            <button class="action-btn play-btn focusable" onclick="MathModule.playTime(${index})">🔊 读时间</button>
-                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                            <button class="action-btn play-btn focusable" data-action="playTime" data-p1="${index}">🔊 读时间</button>
+                            <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                         </div>
                     </div>
                 </div>
@@ -377,7 +375,7 @@ const MathModule = (function() {
         const item = COMPARE_DATA[index];
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main" style="flex-direction:column;">
                     <h2 style="font-size:32px; color:var(--color-gold); margin-bottom:25px;">${item.question}</h2>
                     <div style="display:flex; align-items:center; gap:40px; margin-bottom:25px;">
@@ -392,8 +390,8 @@ const MathModule = (function() {
                         </div>
                     </div>
                     <div class="detail-actions">
-                        <button class="action-btn play-btn focusable" onclick="MathModule.revealCompare(${index})">👀 看答案</button>
-                        <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                        <button class="action-btn play-btn focusable" data-action="revealCompare" data-p1="${index}">👀 看答案</button>
+                        <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                     </div>
                     <div id="compare-answer" style="margin-top:15px;"></div>
                 </div>
@@ -439,11 +437,11 @@ const MathModule = (function() {
     function showPatternDetail(index) {
         const item = PATTERN_DATA[index];
         let seqHtml = item.sequence.map((s, i) => `<span class="obj" style="animation-delay:${i*0.15}s;">${s}</span>`).join('');
-        let optHtml = item.options.map(o => `<button class="action-btn focusable" onclick="MathModule.checkPattern(${index},'${o}')">${o}</button>`).join('');
+        let optHtml = item.options.map(o => `<button class="action-btn focusable" data-action="checkPattern" data-p1="${index}" data-p2="${o}">${o}</button>`).join('');
 
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main" style="flex-direction:column;">
                     <h2 style="font-size:32px; color:var(--color-gold); margin-bottom:20px;">🧩 找出下一个</h2>
                     <div style="display:flex; gap:12px; font-size:56px; align-items:center; margin-bottom:25px;">

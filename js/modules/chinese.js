@@ -1,5 +1,6 @@
 /**
  * 语文模块
+ * v1.4 - 去掉 inline onclick，改用 data-action
  */
 const ChineseModule = (function() {
 
@@ -41,11 +42,12 @@ const ChineseModule = (function() {
 
     function showPinyinDetail(index, sub) {
         const data = sub === 'shengmu' ? PINYIN_SHENGMU[index] : PINYIN_YUNMU[index];
+        const color = sub === 'shengmu' ? '#e74c3c' : '#e67e22';
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main">
-                    <div class="detail-display bounce" style="font-size: 160px; color: ${sub === 'shengmu' ? '#e74c3c' : '#e67e22'};">
+                    <div class="detail-display bounce" style="font-size: 160px; color: ${color};">
                         ${data.text}
                     </div>
                     <div class="detail-info">
@@ -54,8 +56,8 @@ const ChineseModule = (function() {
                         <p>例字：${data.example}</p>
                         <p style="font-size:60px;">${data.emoji}</p>
                         <div class="detail-actions">
-                            <button class="action-btn play-btn focusable" onclick="ChineseModule.playPinyin('${data.text}', '${data.desc}', '${data.example}')">🔊 听发音</button>
-                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                            <button class="action-btn play-btn focusable" data-action="playPinyin" data-p1="${data.text}" data-p2="${data.desc}" data-p3="${data.example}">🔊 听发音</button>
+                            <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                         </div>
                     </div>
                 </div>
@@ -63,7 +65,6 @@ const ChineseModule = (function() {
         `;
         document.querySelector('.screen.active').insertAdjacentHTML('beforeend', html);
         Navigation.pushContext('detail');
-        // 自动播放
         setTimeout(() => playPinyin(data.text, data.desc, data.example), 500);
     }
 
@@ -90,7 +91,7 @@ const ChineseModule = (function() {
         const item = HANZI_LIST[index];
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main">
                     <div class="detail-display bounce" style="font-family: 'STKaiti','KaiTi',serif; color: #e74c3c;">
                         ${item.char}
@@ -103,9 +104,9 @@ const ChineseModule = (function() {
                         <p>词语：${item.words}</p>
                         <p style="font-size:60px;">${item.emoji}</p>
                         <div class="detail-actions">
-                            <button class="action-btn play-btn focusable" onclick="ChineseModule.playHanzi(${index})">🔊 读汉字</button>
-                            <button class="action-btn next-btn focusable" onclick="ChineseModule.strokeDemo(${index})">✏️ 笔画演示</button>
-                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                            <button class="action-btn play-btn focusable" data-action="playHanzi" data-p1="${index}">🔊 读汉字</button>
+                            <button class="action-btn next-btn focusable" data-action="strokeDemo" data-p1="${index}">✏️ 笔画演示</button>
+                            <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                         </div>
                     </div>
                 </div>
@@ -123,7 +124,6 @@ const ChineseModule = (function() {
 
     function strokeDemo(index) {
         const item = HANZI_LIST[index];
-        // 简化笔画演示 - 用SVG动画展示
         const detailView = document.querySelector('.detail-view');
         if (!detailView) return;
 
@@ -172,7 +172,7 @@ const ChineseModule = (function() {
 
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main" style="flex-direction: column;">
                     <div class="poetry-view">
                         <div class="poetry-title">${item.title}</div>
@@ -180,8 +180,8 @@ const ChineseModule = (function() {
                         <div class="poetry-lines">${linesHtml}</div>
                         <p style="margin-top:20px; color: var(--color-text-dim); font-size: 18px;">💡 ${item.desc}</p>
                         <div class="detail-actions" style="margin-top: 30px;">
-                            <button class="action-btn play-btn focusable" onclick="ChineseModule.playPoetry(${index})">🔊 朗诵</button>
-                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                            <button class="action-btn play-btn focusable" data-action="playPoetry" data-p1="${index}">🔊 朗诵</button>
+                            <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                         </div>
                     </div>
                 </div>
@@ -195,9 +195,7 @@ const ChineseModule = (function() {
     function playPoetry(index) {
         const item = POETRY_LIST[index];
         let text = item.title + '，' + item.author + '。';
-        item.lines.forEach(line => {
-            text += line + '。';
-        });
+        item.lines.forEach(line => { text += line + '。'; });
         TTS.speakChinese(text);
     }
 
@@ -220,7 +218,7 @@ const ChineseModule = (function() {
         const item = IDIOM_LIST[index];
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main" style="flex-direction: column; max-width: 800px;">
                     <div class="poetry-view" style="width: 100%;">
                         <div class="poetry-title" style="font-family: 'STKaiti','KaiTi',serif;">${item.name}</div>
@@ -230,8 +228,8 @@ const ChineseModule = (function() {
                             <p style="font-size: 22px; line-height: 2; text-align: left;">📖 ${item.story}</p>
                         </div>
                         <div class="detail-actions" style="margin-top: 25px;">
-                            <button class="action-btn play-btn focusable" onclick="ChineseModule.playIdiom(${index})">🔊 听故事</button>
-                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                            <button class="action-btn play-btn focusable" data-action="playIdiom" data-p1="${index}">🔊 听故事</button>
+                            <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                         </div>
                     </div>
                 </div>
@@ -266,15 +264,15 @@ const ChineseModule = (function() {
         const item = SANZIJING_LIST[index];
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main" style="flex-direction: column;">
                     <div class="poetry-view">
                         <div style="font-size:80px; margin-bottom:20px;">${item.emoji}</div>
                         <div class="poetry-title" style="font-family: 'STKaiti','KaiTi',serif; font-size:48px;">${item.text}</div>
                         <p style="font-size:26px; color: var(--color-gold); margin:25px 0;">💡 ${item.meaning}</p>
                         <div class="detail-actions" style="margin-top:25px;">
-                            <button class="action-btn play-btn focusable" onclick="ChineseModule.playSanZiJing(${index})">🔊 听朗读</button>
-                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                            <button class="action-btn play-btn focusable" data-action="playSanZiJing" data-p1="${index}">🔊 听朗读</button>
+                            <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                         </div>
                     </div>
                 </div>
@@ -307,7 +305,7 @@ const ChineseModule = (function() {
         const item = BAIJIAXING_LIST[index];
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main">
                     <div class="detail-display bounce" style="font-family: 'STKaiti','KaiTi',serif; color: var(--color-gold);">
                         ${item.name}
@@ -317,8 +315,8 @@ const ChineseModule = (function() {
                         <p class="pinyin">拼音：${item.pinyin}</p>
                         <p style="font-size:24px;">起源：${item.origin}</p>
                         <div class="detail-actions">
-                            <button class="action-btn play-btn focusable" onclick="ChineseModule.playBaiJiaXing(${index})">🔊 读一读</button>
-                            <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                            <button class="action-btn play-btn focusable" data-action="playBaiJiaXing" data-p1="${index}">🔊 读一读</button>
+                            <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                         </div>
                     </div>
                 </div>
@@ -351,16 +349,16 @@ const ChineseModule = (function() {
         const item = STORYTALK_LIST[index];
         const html = `
             <div class="detail-view fade-in">
-                <button class="back-btn focusable" onclick="Navigation.handleBack()">‹ 返回</button>
+                <button class="back-btn focusable" data-action="back">‹ 返回</button>
                 <div class="detail-main" style="flex-direction: column; max-width: 800px;">
                     <div style="font-size:80px; margin-bottom:15px;">${item.emoji}</div>
                     <p style="font-size:28px; line-height:1.8; text-align:center;">${item.scene}</p>
                     <p style="font-size:26px; color: var(--color-gold); margin-top:20px;">❓ ${item.question}</p>
                     <p style="font-size:14px; color: var(--color-text-dim);">💡 提示：${item.hint}</p>
                     <div class="detail-actions" style="margin-top:20px;">
-                        <button class="action-btn play-btn focusable" onclick="ChineseModule.playStoryTalk(${index})">🔊 听描述</button>
-                        <button class="action-btn next-btn focusable" onclick="ChineseModule.revealAnswer(${index})">👀 看答案</button>
-                        <button class="action-btn close-btn focusable" onclick="Navigation.handleBack()">✕ 关闭</button>
+                        <button class="action-btn play-btn focusable" data-action="playStoryTalk" data-p1="${index}">🔊 听描述</button>
+                        <button class="action-btn next-btn focusable" data-action="revealAnswer" data-p1="${index}">👀 看答案</button>
+                        <button class="action-btn close-btn focusable" data-action="back">✕ 关闭</button>
                     </div>
                     <div id="story-answer" style="margin-top:15px;"></div>
                 </div>

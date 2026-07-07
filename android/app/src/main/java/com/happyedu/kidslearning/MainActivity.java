@@ -30,6 +30,8 @@ public class MainActivity extends BridgeActivity {
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setDomStorageEnabled(true);
             webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
+            // 开启 WebView 调试（可通过 chrome://inspect 远程调试）
+            webView.setWebContentsDebuggingEnabled(true);
         }
     }
 
